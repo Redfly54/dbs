@@ -7,6 +7,7 @@ import StoryDetailPresenter from './presenter/StoryDetailPresenter.js';
 import NavigationHandler from './utils/navigation-handler.js';
 import OfflineHandler from './utils/offline-handler.js';
 import PushNotificationService from './utils/push-notification.js';
+import PWAInstallHandler from './utils/pwa-install-handler.js';
 
 const routes = {
   '/login': () => {
@@ -129,8 +130,43 @@ function setupPushNotificationsOnLogin() {
   };
 }
 
+// Register Service Worker for PWA
+async function registerServiceWorker() {
+  if ('serviceWorker' in navigator) {
+    try {
+      const registration = await navigator.serviceWorker.register('/sw.js', {
+        scope: '/'
+      });
+      
+      console.log('Service Worker registered successfully:', registration);
+
+      // Check for updates
+      registration.addEventListener('updatefound', () => {
+        console.log('Service Worker update found');
+        const newWorker = registration.installing;
+        
+        newWorker.addEventListener('statechange', () => {
+          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            // New version available
+            console.log('New version available');
+            if (confirm('New version available! Refresh to update?')) {
+              window.location.reload();
+            }
+          }
+        });
+      });
+
+      return registration;
+    } catch (error) {
+      console.error('Service Worker registration failed:', error);
+    }
+  } else {
+    console.log('Service Worker not supported');
+  }
+}
+
 window.addEventListener('hashchange', navigate);
-window.addEventListener('load', () => {
+window.addEventListener('load', async () => {
   // Sync Model.token dengan localStorage saat startup
   Model.token = localStorage.getItem('story_token');
   
@@ -140,16 +176,11 @@ window.addEventListener('load', () => {
   // Initialize offline handler
   OfflineHandler;
   
-  // AUTO REGISTER SERVICE WORKER - TAMBAHKAN INI
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js')
-      .then(registration => {
-        console.log('Service Worker registered automatically:', registration);
-      })
-      .catch(error => {
-        console.warn('Service Worker registration failed:', error);
-      });
-  }
+  // Register Service Worker for PWA
+  await registerServiceWorker();
+  
+  // Initialize PWA install handler
+  PWAInstallHandler.init();
   
   // Jika tidak ada hash, set default berdasarkan login status
   if (!location.hash || location.hash === '#' || location.hash === '#/') {

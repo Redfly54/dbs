@@ -1,7 +1,7 @@
 {
   "name": "Dicoding Story SPA",
   "short_name": "Story SPA",
-  "description": "A story sharing application",
+  "description": "A story sharing application with PWA features",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
@@ -24,5 +24,22 @@
   ],
   "categories": ["social", "photography"],
   "lang": "id",
-  "dir": "ltr"
+  "dir": "ltr",
+  "prefer_related_applications": false,
+  "shortcuts": [
+    {
+      "name": "View Stories",
+      "short_name": "Stories",
+      "description": "View all stories",
+      "url": "/#/stories",
+      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Add Story",
+      "short_name": "Add",
+      "description": "Add new story",
+      "url": "/#/add",
+      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
+    }
+  ]
 }

@@ -364,4 +364,120 @@ body.pwa-mode {
     padding: 0.75rem;
     margin-bottom: 1rem;
   }
+  @media (display-mode: standalone) {
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  header {
+    padding-top: calc(var(--spacing) + env(safe-area-inset-top));
+  }
+}
+
+/* PWA Install Button */
+#pwa-install-btn {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 4px 12px rgba(94, 158, 226, 0.3);
+  }
+  50% {
+    box-shadow: 0 4px 20px rgba(94, 158, 226, 0.5);
+  }
+  100% {
+    box-shadow: 0 4px 12px rgba(94, 158, 226, 0.3);
+  }
+}
+
+/* Offline indicator improvements */
+.offline-indicator {
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* Update existing offline content styling */
+#offline-content {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border: 2px dashed #6c757d;
+  border-radius: var(--radius);
+  margin: 2rem 0;
+  padding: 2rem;
+  text-align: center;
+  position: relative;
+}
+
+#offline-content::before {
+  content: "📱";
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+#offline-content h2 {
+  color: var(--clr-secondary);
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+#offline-content p {
+  color: #6c757d;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+/* Improved loading states */
+.loading {
+  position: relative;
+  opacity: 0.7;
+}
+
+.loading::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid var(--clr-primary);
+  border-radius: 50%;
+  border-right-color: transparent;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Enhanced toast notifications */
+.toast {
+  backdrop-filter: blur(10px);
+  font-weight: 500;
+}
+
+.toast.show {
+  animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }

@@ -10,10 +10,9 @@ export default class StoryDetailPresenter {
   }
 
   async init() {
-
     if (!this.model.token) {
-        alert('Anda harus login terlebih dahulu');
-        return location.hash = '/login';
+      this.view.showLoginRequired();
+      return;
     }
     
     try {
@@ -21,8 +20,7 @@ export default class StoryDetailPresenter {
       const { story } = await this.model.getStory(this.storyId);
       this.view.render(story, maptilerKey);
     } catch (err) {
-      alert(`Gagal memuat detail: ${err.message}`);
-      location.hash = '/stories';
+      this.view.showError(err.message);
     }
   }
 }

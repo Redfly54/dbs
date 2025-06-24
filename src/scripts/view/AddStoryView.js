@@ -41,8 +41,7 @@ export default class AddStoryView {
 
     document.getElementById('backBtn')
       .addEventListener('click', () => {
-        location.hash = '/stories';
-        this.cleanup();  // Ensure camera is stopped when navigating back
+        this.goBackToStories();
       });
 
     // 1) Setup kamera
@@ -89,7 +88,7 @@ export default class AddStoryView {
         e.preventDefault(); // Prevents the default form submit
         const f = e.target;
         if (!canvas.toBlob) {
-          alert('Browser Anda tidak mendukung toBlob');
+          this.showError('Browser Anda tidak mendukung toBlob');
           return;
         }
 
@@ -107,5 +106,28 @@ export default class AddStoryView {
       this.cleanup();  // Ensure the camera is stopped when URL hash changes
     });
     
+  }
+
+  goBackToStories() {
+    location.hash = '/stories';
+    this.cleanup();  // Ensure camera is stopped when navigating back
+  }
+
+  showSuccess() {
+    alert('Story berhasil ditambahkan!');
+    location.hash = '/stories';
+  }
+
+  showError(message) {
+    alert(`Gagal submit: ${message}`);
+  }
+
+  showConfigError(message) {
+    alert(`Gagal load konfigurasi: ${message}`);
+  }
+
+  showLoginRequired() {
+    alert('Anda harus login terlebih dahulu');
+    location.hash = '/login';
   }
 }

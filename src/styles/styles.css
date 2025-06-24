@@ -30,19 +30,26 @@ body {
 /* ————————————————————————————
    Skip Link
    ———————————————————————————— */
-.skip-link {
-  position: absolute;
-  top: 1rem;
-  left: 12rem;
+.skip-to-content {
+  position: absolute !important;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
   background: var(--clr-secondary);
   color: #fff;
   padding: 0.5rem 1rem;
   border-radius: var(--radius);
   text-decoration: none;
-  transition: top 0.3s;
+  transition: all 0.3s;
 }
-.skip-link:focus {
-  top: 1rem;
+
+.skip-to-content:focus {
+  position: unset !important;
+  height: auto;
+  width: auto;
+  overflow: visible;
+  clip: auto;
 }
 
 /* ————————————————————————————
@@ -52,6 +59,7 @@ header {
   background: var(--clr-primary);
   color: #fff;
   padding: var(--spacing);
+  position: relative;
 }
 header h1 {
   font-weight: 600;
@@ -60,15 +68,31 @@ header h1 {
 nav {
   margin-top: 0.5rem;
 }
-nav a {
+nav a, nav button {
   color: #fff;
   text-decoration: none;
   margin-right: var(--spacing);
   font-weight: 500;
   transition: opacity 0.2s;
 }
-nav a:hover {
+nav a:hover, nav button:hover {
   opacity: 0.8;
+}
+
+/* Logout button specific styles */
+#logoutBtn {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: inherit;
+  font-weight: 500;
+  padding: 0;
+}
+
+#logoutBtn:hover {
+  opacity: 0.8;
+  text-decoration: underline;
 }
 
 /* ————————————————————————————
@@ -177,19 +201,6 @@ form button:hover {
 }
 #backBtn:hover {
   text-decoration: underline;
-}
-
-.skip-to-content {
-  position: absolute !important;
-  height: 1px;
-  width: 1px;
-  overflow: hidden;
-  clip: rect(1px, 1px, 1px, 1px);
-  color: red;
-}
-
-.skip-to-content:focus {
-  position: unset !important;
 }
 
 /* ————————————————————————————

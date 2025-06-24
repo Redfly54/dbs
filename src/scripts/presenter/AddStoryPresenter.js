@@ -1,36 +1,3 @@
-// import { loadConfig } from '../utils/index.js';
-// import AddStoryView from '../view/AddStoryView.js';
-
-// export default class AddStoryPresenter {
-//   constructor(model) {
-//     this.model = model;
-//     this.view  = new AddStoryView();
-//   }
-
-//   async init() {
-
-//     if (!this.model.token) {
-//         alert('Anda harus login terlebih dahulu');
-//         return location.hash = '/login';
-//     }
-    
-//     try {
-//       const { maptilerKey } = await loadConfig();
-//       this.view.render(async ({ photo, description, lat, lon }) => {
-//         try {
-//           await this.model.addStory({ photo, description, lat, lon });
-//           alert('Story berhasil ditambahkan!');
-//           location.hash = '/stories';
-//         } catch (err) {
-//           alert(`Gagal submit: ${err.message}`);
-//         }
-//       }, maptilerKey);
-//     } catch (err) {
-//       alert(`Gagal load konfigurasi: ${err.message}`);
-//     }
-//   }
-// }
-
 import AddStoryModel from '../model/AddStoryModel.js';
 import { loadConfig } from '../utils/index.js';
 import AddStoryView from '../view/AddStoryView.js';
@@ -44,8 +11,8 @@ export default class AddStoryPresenter {
   async init() {
     // Check if the user is logged in by checking the token
     if (!this.model.token) {
-      alert('Anda harus login terlebih dahulu');
-      return location.hash = '/login';  // Redirect to login if no token is found
+      this.view.showLoginRequired();
+      return;
     }
 
     try {
@@ -57,14 +24,13 @@ export default class AddStoryPresenter {
         try {
           // Call the model to add the story
           await this.model.addStory({ photo, description, lat, lon });
-          alert('Story berhasil ditambahkan!');
-          location.hash = '/stories';  // Redirect to stories page after successful submission
+          this.view.showSuccess();
         } catch (err) {
-          alert(`Gagal submit: ${err.message}`);  // Handle errors if the submission fails
+          this.view.showError(err.message);
         }
       }, maptilerKey);
     } catch (err) {
-      alert(`Gagal load konfigurasi: ${err.message}`);  // Handle errors if config loading fails
+      this.view.showConfigError(err.message);
     }
   }
 }

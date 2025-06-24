@@ -10,21 +10,26 @@
   />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
-  <script src="https://kit.fontawesome.com/REPLACE_WITH_YOUR_KIT.js" crossorigin="anonymous"></script>
 </head>
 <body>
-  <!-- Tautan untuk melewati navigasi dan langsung ke konten utama -->
-  <!-- <a class="skip-link" href="#main-content">Skip to content</a> -->
-  <a class="skip-to-content" href="#main-content">Skip to content</a>
-
-
   <header>
-    <h1>Dicoding Sto</h1>
-    <nav>
-      <a href="#/login">Login</a> |
-      <a href="#/register">Register</a> |
-      <a href="#/stories">All Stories</a>
-      <a href="#/add">Add Story</a>
+    <!-- Skip-link dipindahkan ke dalam header sesuai semantic HTML -->
+    <a class="skip-to-content" href="#main-content">Skip to content</a>
+    
+    <h1>Dicoding Story</h1>
+    <nav id="main-nav">
+      <!-- Navigation untuk user yang belum login -->
+      <div id="guest-nav">
+        <a href="#/login">Login</a> |
+        <a href="#/register">Register</a>
+      </div>
+      
+      <!-- Navigation untuk user yang sudah login -->
+      <div id="user-nav" style="display: none;">
+        <a href="#/stories">All Stories</a> |
+        <a href="#/add">Add Story</a> |
+        <button id="logoutBtn" style="background: none; border: none; color: white; cursor: pointer; font-size: inherit;">Logout</button>
+      </div>
     </nav>
   </header>
 

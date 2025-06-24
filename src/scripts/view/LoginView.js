@@ -24,4 +24,19 @@ export default class LoginView {
         onSubmit(f.email.value, f.password.value);
       });
   }
+
+  showLoginSuccess() {
+    alert('Login berhasil!');
+    
+    // Force update navigation setelah login berhasil
+    setTimeout(() => {
+      // Dispatch event untuk update navigation
+      window.dispatchEvent(new Event('loginSuccess'));
+      location.hash = '/stories';
+    }, 100);
+  }
+
+  showLoginError(message) {
+    alert(`Login gagal: ${message}`);
+  }
 }

@@ -29,4 +29,13 @@ export default class RegisterView {
         onSubmit(f.name.value, f.email.value, f.password.value);
       });
   }
+
+  showRegisterSuccess(userName) {
+    alert(`Registrasi berhasil! Selamat datang, ${userName}. Silakan login.`);
+    location.hash = '/login';
+  }
+
+  showRegisterError(message) {
+    alert(`Gagal registrasi: ${message}`);
+  }
 }

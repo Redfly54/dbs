@@ -25,17 +25,6 @@ export default {
     });
   },
 
-  // login(email, password) {
-  //   return this.request('/login', {
-  //     method: 'POST',
-  //     body: { email, password }
-  //   }).then(data => {
-  //     this.token = data.token;
-  //      localStorage.setItem('story_token', data.token);
-  //     return data;
-  //   });
-  // },
-
   async login(email, password) {
     // ini akan mengembalikan seluruh response JSON, termasuk field "loginResult"
     const res = await this.request('/login', {
@@ -51,6 +40,9 @@ export default {
     this.token = token;
     localStorage.setItem('story_token', token);
 
+    // Trigger navigation update
+    window.dispatchEvent(new Event('loginSuccess'));
+
     // kembalikan juga data user kalau perlu
     return {
       userId: res.loginResult.userId,
@@ -62,6 +54,9 @@ export default {
   logout() {
     this.token = null;
     localStorage.removeItem('story_token');
+    
+    // Trigger navigation update
+    window.dispatchEvent(new Event('logoutSuccess'));
   },
 
   // Stories

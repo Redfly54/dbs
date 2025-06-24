@@ -36,4 +36,14 @@ export default class StoryDetailView {
         .addTo(map);
     }
   }
+
+  showLoginRequired() {
+    alert('Anda harus login terlebih dahulu');
+    location.hash = '/login';
+  }
+
+  showError(message) {
+    alert(`Gagal memuat detail: ${message}`);
+    location.hash = '/stories';
+  }
 }

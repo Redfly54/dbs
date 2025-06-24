@@ -1,31 +1,9 @@
-// import LoginView from '../view/LoginView.js';
-
-// export default class LoginPresenter {
-//   constructor(model) {
-//     this.model = model;
-//     this.view = new LoginView();
-//   }
-//   init() {
-//     this.view.render(async (email, pass) => {
-//       try {
-//         await this.model.login(email, pass);
-//         alert('Login berhasil!');
-//         location.hash = '/stories';
-//       } catch (err) {
-//         console.error(err);
-//         alert(err.message);
-//       }
-//     });
-//   }
-// }
-
-
 import LoginModel from '../model/LoginModel';
 import LoginView from '../view/LoginView.js';
 
 export default class LoginPresenter {
   constructor() {
-    this.model = new LoginModel();  // Use the LoginModel
+    this.model = new LoginModel();
     this.view = new LoginView();
   }
 
@@ -33,11 +11,10 @@ export default class LoginPresenter {
     this.view.render(async (email, pass) => {
       try {
         await this.model.login(email, pass);
-        alert('Login berhasil!');
-        location.hash = '/stories';
+        this.view.showLoginSuccess();
       } catch (err) {
         console.error(err);
-        alert(err.message);
+        this.view.showLoginError(err.message);
       }
     });
   }

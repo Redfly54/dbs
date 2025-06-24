@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dicoding Story SPA</title>
+  <link rel="stylesheet" href="styles/styles.css" />
+  <link
+    href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css"
+    rel="stylesheet"
+  />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
+  <script src="https://kit.fontawesome.com/REPLACE_WITH_YOUR_KIT.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <!-- Tautan untuk melewati navigasi dan langsung ke konten utama -->
+  <!-- <a class="skip-link" href="#main-content">Skip to content</a> -->
+  <a class="skip-to-content" href="#main-content">Skip to content</a>
+
+
+  <header>
+    <h1>Dicoding Sto</h1>
+    <nav>
+      <a href="#/login">Login</a> |
+      <a href="#/register">Register</a> |
+      <a href="#/stories">All Stories</a>
+      <a href="#/add">Add Story</a>
+    </nav>
+  </header>
+
+  <!-- Konten utama -->
+  <main id="main-content" tabindex="-1">
+    <div id="app"><!-- konten SPA di-render di sini --></div>
+  </main>
+
+  <!-- Footer -->
+  <footer role="contentinfo">
+    <p>&copy; 2025 Dicoding Story</p>
+  </footer>
+
+  <!-- Menyertakan skrip aplikasi -->
+  <script type="module" src="scripts/app.js"></script>
+</body>
+</html>

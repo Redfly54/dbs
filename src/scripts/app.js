@@ -5,6 +5,7 @@ import RegisterPresenter from './presenter/RegisterPresenter.js';
 import StoriesListPresenter from './presenter/StoriesListPresenter.js';
 import StoryDetailPresenter from './presenter/StoryDetailPresenter.js';
 import NavigationHandler from './utils/navigation-handler.js';
+import OfflineHandler from './utils/offline-handler.js';
 import PushNotificationService from './utils/push-notification.js';
 
 const routes = {
@@ -58,6 +59,16 @@ function router() {
   if ((path === '/login' || path === '/register') && token) {
     location.hash = '/stories';
     return;
+  }
+
+  // Check offline status for network-dependent routes
+  if (!OfflineHandler.checkOnlineStatus()) {
+    const networkRoutes = ['/stories', '/add', '/login', '/register'];
+    if (networkRoutes.includes(path)) {
+      const contentType = path === '/stories' ? 'stories' : path === '/login' ? 'login' : 'general';
+      OfflineHandler.showOfflineFallback(contentType);
+      return;
+    }
   }
 
   const route = Object.keys(routes).find(r => {
@@ -125,6 +136,9 @@ window.addEventListener('load', () => {
   
   // Initialize navigation
   NavigationHandler.updateNavigation();
+  
+  // Initialize offline handler
+  OfflineHandler;
   
   // AUTO REGISTER SERVICE WORKER - TAMBAHKAN INI
   if ('serviceWorker' in navigator) {

@@ -126,6 +126,17 @@ window.addEventListener('load', () => {
   // Initialize navigation
   NavigationHandler.updateNavigation();
   
+  // AUTO REGISTER SERVICE WORKER - TAMBAHKAN INI
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js')
+      .then(registration => {
+        console.log('Service Worker registered automatically:', registration);
+      })
+      .catch(error => {
+        console.warn('Service Worker registration failed:', error);
+      });
+  }
+  
   // Jika tidak ada hash, set default berdasarkan login status
   if (!location.hash || location.hash === '#' || location.hash === '#/') {
     const token = localStorage.getItem('story_token');

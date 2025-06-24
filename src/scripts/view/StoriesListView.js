@@ -1,4 +1,6 @@
 // js/view/StoriesListView.js
+import PushNotificationService from '../utils/push-notification.js';
+
 export default class StoriesListView {
   constructor() {
     console.log('StoriesListView constructor called'); // DEBUG
@@ -100,7 +102,7 @@ export default class StoriesListView {
     }
   }
 
-  // Async push notification setup (tidak mengganggu main rendering)
+  // Async push notification setup (menggunakan PushNotificationService)
   async setupPushNotificationsAsync() {
     try {
       console.log('Push notification setup starting...'); // DEBUG
@@ -124,15 +126,114 @@ export default class StoriesListView {
         return;
       }
 
-      // Simple setup tanpa import PushNotificationService dulu
-      statusText.textContent = 'Push notifications available';
-      enableBtn.style.display = 'inline-block';
-      enableBtn.textContent = 'Enable Push Notifications';
-      
-      enableBtn.addEventListener('click', () => {
-        statusText.textContent = 'Push notifications feature coming soon!';
-        enableBtn.style.display = 'none';
-      });
+      // Cek apakah sudah ada subscription
+      try {
+        const subscription = await PushNotificationService.checkSubscription();
+        
+        if (subscription) {
+          // Sudah subscribed - tampilkan status dan tombol unsubscribe
+          statusText.innerHTML = '✓ Push notifications enabled <button id="unsubscribeBtn" style="margin-left: 10px; font-size: 0.8em;">Disable</button>';
+          statusText.style.color = '#28a745';
+          console.log('Push notifications already enabled'); // DEBUG
+          
+          // Setup unsubscribe button
+          const unsubscribeBtn = document.getElementById('unsubscribeBtn');
+          if (unsubscribeBtn) {
+            unsubscribeBtn.addEventListener('click', async () => {
+              try {
+                unsubscribeBtn.disabled = true;
+                unsubscribeBtn.textContent = 'Disabling...';
+                
+                await PushNotificationService.unsubscribeFromPushNotifications();
+                
+                // Reset UI
+                statusText.innerHTML = 'Push notifications available';
+                statusText.style.color = '#666';
+                enableBtn.style.display = 'inline-block';
+                console.log('Push notifications disabled successfully'); // DEBUG
+              } catch (error) {
+                console.error('Failed to disable push notifications:', error);
+                unsubscribeBtn.disabled = false;
+                unsubscribeBtn.textContent = 'Disable';
+                statusText.innerHTML = `Failed to disable: ${error.message} <button id="unsubscribeBtn" style="margin-left: 10px; font-size: 0.8em;">Retry</button>`;
+                statusText.style.color = '#dc3545';
+              }
+            });
+          }
+        } else {
+          // Belum subscribed - tampilkan tombol enable
+          enableBtn.style.display = 'inline-block';
+          statusText.textContent = 'Get notified when new stories are added';
+          
+          enableBtn.addEventListener('click', async () => {
+            try {
+              enableBtn.disabled = true;
+              enableBtn.textContent = 'Enabling...';
+              
+              await PushNotificationService.subscribeToPushNotifications();
+              
+              // Update UI setelah berhasil subscribe
+              enableBtn.style.display = 'none';
+              statusText.innerHTML = '✓ Push notifications enabled <button id="unsubscribeBtn" style="margin-left: 10px; font-size: 0.8em;">Disable</button>';
+              statusText.style.color = '#28a745';
+              console.log('Push notifications enabled successfully'); // DEBUG
+              
+              // Setup unsubscribe button untuk yang baru di-enable
+              const unsubscribeBtn = document.getElementById('unsubscribeBtn');
+              if (unsubscribeBtn) {
+                unsubscribeBtn.addEventListener('click', async () => {
+                  try {
+                    unsubscribeBtn.disabled = true;
+                    unsubscribeBtn.textContent = 'Disabling...';
+                    
+                    await PushNotificationService.unsubscribeFromPushNotifications();
+                    
+                    // Reset UI
+                    statusText.innerHTML = 'Push notifications available';
+                    statusText.style.color = '#666';
+                    enableBtn.style.display = 'inline-block';
+                    enableBtn.disabled = false;
+                    enableBtn.textContent = 'Enable Push Notifications';
+                  } catch (error) {
+                    console.error('Failed to disable push notifications:', error);
+                    unsubscribeBtn.disabled = false;
+                    unsubscribeBtn.textContent = 'Disable';
+                  }
+                });
+              }
+            } catch (error) {
+              console.error('Failed to enable push notifications:', error);
+              enableBtn.disabled = false;
+              enableBtn.textContent = 'Enable Push Notifications';
+              statusText.textContent = `Failed to enable: ${error.message}`;
+              statusText.style.color = '#dc3545';
+            }
+          });
+        }
+      } catch (checkError) {
+        console.error('Error checking subscription:', checkError);
+        enableBtn.style.display = 'inline-block';
+        statusText.textContent = 'Push notifications available';
+        
+        enableBtn.addEventListener('click', async () => {
+          try {
+            enableBtn.disabled = true;
+            enableBtn.textContent = 'Enabling...';
+            
+            await PushNotificationService.subscribeToPushNotifications();
+            
+            enableBtn.style.display = 'none';
+            statusText.innerHTML = '✓ Push notifications enabled <button id="unsubscribeBtn" style="margin-left: 10px; font-size: 0.8em;">Disable</button>';
+            statusText.style.color = '#28a745';
+          } catch (error) {
+            console.error('Failed to enable push notifications:', error);
+            enableBtn.disabled = false;
+            enableBtn.textContent = 'Enable Push Notifications';
+            statusText.textContent = `Failed to enable: ${error.message}`;
+            statusText.style.color = '#dc3545';
+          }
+        });
+      }
 
       console.log('Push notification setup completed'); // DEBUG
     } catch (error) {

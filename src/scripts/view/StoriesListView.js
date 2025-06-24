@@ -1,4 +1,5 @@
 // js/view/StoriesListView.js
+import IndexedDBHandler from '../utils/indexeddb-handler.js';
 import PushNotificationService from '../utils/push-notification.js';
 
 export default class StoriesListView {
@@ -62,6 +63,15 @@ export default class StoriesListView {
             <h4>${s.name}</h4>
             <p>${s.description}</p>
             <small>${new Date(s.createdAt).toLocaleString()}</small>
+            <div style="padding: 0.5rem; border-top: 1px solid #eee; margin-top: 0.5rem;">
+              <button 
+                class="bookmark-btn" 
+                data-story='${JSON.stringify(s).replace(/'/g, "&apos;")}'
+                style="background: #17a2b8; color: white; border: none; padding: 0.25rem 0.75rem; border-radius: 0.25rem; cursor: pointer; font-size: 0.85rem; width: 100%;"
+              >
+                🔖 Bookmark Story
+              </button>
+            </div>
           `;
           listEl.appendChild(item);
           console.log(`Story ${index + 1} added successfully`); // DEBUG
@@ -69,6 +79,9 @@ export default class StoriesListView {
           console.error(`Error adding story ${index + 1}:`, itemError);
         }
       });
+
+      // Setup bookmark functionality
+      this.setupBookmarkButtons();
 
       console.log('Stories rendered successfully! Total:', listEl.children.length); // DEBUG
 
@@ -100,6 +113,53 @@ export default class StoriesListView {
         });
       }
     }
+  }
+
+  // Setup bookmark button functionality
+  setupBookmarkButtons() {
+    const bookmarkButtons = document.querySelectorAll('.bookmark-btn');
+    bookmarkButtons.forEach(button => {
+      button.addEventListener('click', async (e) => {
+        e.preventDefault();
+        
+        try {
+          const storyData = JSON.parse(button.dataset.story);
+          
+          // Check if already bookmarked
+          const isBookmarked = await IndexedDBHandler.isBookmarked(storyData.id);
+          if (isBookmarked) {
+            this.showToast('Story already bookmarked!', 'warning');
+            return;
+          }
+          
+          // Disable button during process
+          button.disabled = true;
+          button.textContent = '📚 Saving...';
+          
+          // Save to IndexedDB
+          await IndexedDBHandler.saveBookmark(storyData);
+          
+          // Update button
+          button.style.background = '#28a745';
+          button.textContent = '✓ Bookmarked';
+          
+          this.showToast('Story bookmarked successfully!', 'success');
+          
+          // Reset button after delay
+          setTimeout(() => {
+            button.disabled = false;
+            button.style.background = '#17a2b8';
+            button.textContent = '🔖 Bookmark Story';
+          }, 2000);
+          
+        } catch (error) {
+          console.error('Error bookmarking story:', error);
+          button.disabled = false;
+          button.textContent = '🔖 Bookmark Story';
+          this.showToast('Failed to bookmark story: ' + error.message, 'error');
+        }
+      });
+    });
   }
 
   // Async push notification setup (menggunakan PushNotificationService)
@@ -302,5 +362,29 @@ export default class StoriesListView {
 
   showError(message) {
     alert(`Gagal memuat stories: ${message}`);
+  }
+
+  showToast(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.style.cssText = `
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: ${type === 'success' ? '#4caf50' : type === 'warning' ? '#ff9800' : type === 'error' ? '#dc3545' : '#2196f3'};
+      color: white;
+      padding: 12px 20px;
+      border-radius: 4px;
+      z-index: 1001;
+      font-size: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    `;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+      if (toast.parentNode) {
+        toast.parentNode.removeChild(toast);
+      }
+    }, 3000);
   }
 }

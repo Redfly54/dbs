@@ -114,10 +114,20 @@ export class OfflineHandler {
           <div style="text-align: center; padding: 2rem; background: #f5f5f5; border-radius: 8px; margin: 1rem 0;">
             <h3>📱 You're offline</h3>
             <p>Stories require an internet connection to load.</p>
-            <p>Please check your connection and try again.</p>
+            <p>But you can still view your <a href="#/bookmarks" style="color: var(--clr-primary);">bookmarked stories</a> offline!</p>
             <button onclick="location.reload()" style="margin-top: 1rem; padding: 8px 16px; background: #5E9EE2; color: white; border: none; border-radius: 4px; cursor: pointer;">
               Try Again
             </button>
+          </div>
+        `;
+        break;
+      case 'bookmarks':
+        fallbackHTML = `
+          <h2>My Bookmarks</h2>
+          <div style="text-align: center; padding: 2rem; background: #e8f5e8; border-radius: 8px; margin: 1rem 0;">
+            <h3>📚 Bookmarks Available Offline</h3>
+            <p>Your bookmarked stories are stored locally and available offline.</p>
+            <p>Loading your bookmarks...</p>
           </div>
         `;
         break;
@@ -136,6 +146,7 @@ export class OfflineHandler {
           <div style="text-align: center; padding: 2rem;">
             <h2>📱 You're offline</h2>
             <p>Some features may not be available while offline.</p>
+            <p>You can still view your <a href="#/bookmarks" style="color: var(--clr-primary);">bookmarked stories</a>!</p>
             <p>Please check your internet connection.</p>
           </div>
         `;

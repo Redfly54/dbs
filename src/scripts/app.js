@@ -1,9 +1,11 @@
 import Model from './model.js';
 import AddStoryPresenter from './presenter/AddStoryPresenter.js';
+import BookmarksPresenter from './presenter/BookmarksPresenter.js';
 import LoginPresenter from './presenter/LoginPresenter.js';
 import RegisterPresenter from './presenter/RegisterPresenter.js';
 import StoriesListPresenter from './presenter/StoriesListPresenter.js';
 import StoryDetailPresenter from './presenter/StoryDetailPresenter.js';
+import IndexedDBHandler from './utils/indexeddb-handler.js';
 import NavigationHandler from './utils/navigation-handler.js';
 import OfflineHandler from './utils/offline-handler.js';
 import PushNotificationService from './utils/push-notification.js';
@@ -30,6 +32,10 @@ const routes = {
     console.log('Executing add story route'); // DEBUG
     return new AddStoryPresenter().init();
   },
+  '/bookmarks': () => {
+    console.log('Executing bookmarks route'); // DEBUG
+    return new BookmarksPresenter().init();
+  },
 };
 
 function parseLocation() {
@@ -46,7 +52,7 @@ function router() {
   console.log('Router:', { path, id });
 
   // Check if route requires authentication - gunakan localStorage sebagai single source of truth
-  const protectedRoutes = ['/stories', '/add'];
+  const protectedRoutes = ['/stories', '/add', '/bookmarks'];
   const isProtectedRoute = protectedRoutes.some(route => path === route || path.startsWith(route));
   const token = localStorage.getItem('story_token');
   
@@ -175,6 +181,14 @@ window.addEventListener('load', async () => {
   
   // Initialize offline handler
   OfflineHandler;
+  
+  // Initialize IndexedDB
+  try {
+    await IndexedDBHandler.initDB();
+    console.log('IndexedDB initialized successfully');
+  } catch (error) {
+    console.warn('IndexedDB initialization failed:', error);
+  }
   
   // Register Service Worker for PWA
   await registerServiceWorker();

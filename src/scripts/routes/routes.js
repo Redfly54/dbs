@@ -1,16 +1,8 @@
-// import HomePage from '../pages/home/home-page';
-// import AboutPage from '../pages/about/about-page';
-
-// const routes = {
-//   '/': new HomePage(),
-//   '/about': new AboutPage(),
-// };
-
-// export default routes;
-
+// src/scripts/routes/routes.js
 import AboutPage from '../pages/about/about-page';
 import HomePage from '../pages/home/home-page';
 import AddStoryPresenter from '../presenter/AddStoryPresenter.js';
+import BookmarksPresenter from '../presenter/BookmarksPresenter.js';
 import LoginPresenter from '../presenter/LoginPresenter.js';
 import RegisterPresenter from '../presenter/RegisterPresenter.js';
 import StoriesListPresenter from '../presenter/StoriesListPresenter.js';
@@ -26,6 +18,7 @@ const routes = {
   '/stories': () => new StoriesListPresenter(Model).init(),
   '/stories/:id': (id) => new StoryDetailPresenter(Model, id).init(),
   '/add': () => new AddStoryPresenter(Model).init(),
+  '/bookmarks': () => new BookmarksPresenter().init(),
 };
 
 function router() {
@@ -63,4 +56,3 @@ function navigate() {
 
 window.addEventListener('hashchange', navigate);
 window.addEventListener('load', navigate);
-

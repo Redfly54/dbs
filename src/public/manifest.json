@@ -35,6 +35,13 @@
       "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
     },
     {
+      "name": "My Bookmarks",
+      "short_name": "Bookmarks",
+      "description": "View bookmarked stories",
+      "url": "/#/bookmarks",
+      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
       "name": "Add Story",
       "short_name": "Add",
       "description": "Add new story",
